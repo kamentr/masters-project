@@ -36,7 +36,7 @@ class AgentLogRepositoryTests {
     @Test
     void findsLogsForSingleRequestInMessageOrder() {
         agentLogRepository.save("req-1", "UserRequestAgent", "RecommendationAgent", "REQUEST", "request sent");
-        agentLogRepository.save("req-2", "UserRequestAgent", "OntologyUpdateAgent", "REQUEST", "other request");
+        agentLogRepository.save("req-2", "RecommendationAgent", "PropertyAgent", "REQUEST", "other request");
         agentLogRepository.save("req-1", "RecommendationAgent", "UserRequestAgent", "INFORM", "response received");
 
         var logs = agentLogRepository.findByRequestId("req-1");

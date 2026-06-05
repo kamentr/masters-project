@@ -30,7 +30,7 @@ The project maps to all standard university assignment requirements for Semantic
 | **Ontology Management** | Programmatic reading, querying, and updating of the ontology file using the Java **OWL API 5**. |
 | **Agent Runtime** | Multi-agent execution using the **JADE** framework. |
 | **Agent Communication** | Messages exchanged asynchronously using FIPA-ACL performatives (`REQUEST`, `INFORM`, `FAILURE`) with structured JSON content payloads. |
-| **Spring Framework Integration** | A Spring-JADE bridge using a thread-safe asynchronous `AgentBridge` utilizing Java `CompletableFuture` to link Spring MVC's request-response cycle with JADE's message queue. |
+| **Spring Framework Integration** | A Spring-JADE bridge using a thread-safe asynchronous `AgentBridge` utilizing Java `CompletableFuture` to link the recommendation request-response cycle with JADE's message queue. Admin ontology writes use direct Spring service calls for a simpler and more reliable CRUD path. |
 | **Persistence Layer** | Non-ontology database logs (ACL messages), favorite listings, and search histories persisted to SQLite using Spring's `JdbcTemplate` to keep SQL light and predictable. |
 | **User Interface** | Modern Thymeleaf web interface incorporating responsive Bootstrap 5 forms, tables, card lists, and Leaflet interactive map markers. |
 
@@ -38,13 +38,14 @@ The project maps to all standard university assignment requirements for Semantic
 
 ## 3. System Architecture Diagram
 
-The system follows a decoupling of the MVC web layer from the JADE agent platform, linking them through a thread-safe agent bridge.
+The system separates two flows: recommendation searches go through the JADE multi-agent platform, while admin import/edit operations call the ontology service directly.
 
 ```mermaid
 graph TD
     %% Nodes
     A[User Browser] <-->|HTTP GET / POST| B[Spring Boot MVC Controller]
-    B -->|Search/Update Service| C[RecommendationService / ImportService]
+    B -->|Search| C[RecommendationService]
+    B -->|Import/Edit| M[PropertyImportService]
     C <-->|CompletableFuture| D[AgentBridge]
     
     subgraph JADE Multi-Agent Container
@@ -52,13 +53,12 @@ graph TD
         E <-->|FIPA-ACL Request/Inform| F[RecommendationAgent]
         F <-->|FIPA-ACL Request/Inform| G[PropertyAgent]
         F <-->|FIPA-ACL Request/Inform| H[NeighborhoodAgent]
-        I[OntologyUpdateAgent] <-->|FIPA-ACL Request/Inform| E
     end
     
     subgraph Knowledge & Storage
         G -->|OWL API 5 Read| J[(plovdiv-real-estate.owl)]
-        I -->|OWL API 5 Write| J
         H -->|OWL API 5 Read| J
+        M -->|OWL API 5 Write| J
         
         K[Database Repositories] -->|Spring JDBC| L[(SQLite database: advisor.db)]
         B --> K
@@ -104,7 +104,7 @@ The ontology is modeled in `plovdiv-real-estate.owl` and contains the structural
 
 ## 5. Agent Model: Agent Types, Responsibilities, ACL Communication
 
-Five specialized JADE agents collaborate inside the application:
+Four specialized JADE agents collaborate inside the recommendation workflow:
 
 1. **`UserRequestAgent`**:
    - Actively listens for Spring-triggered tasks from the `AgentBridge` using the JADE Object-to-Agent (O2A) queue.
@@ -124,9 +124,6 @@ Five specialized JADE agents collaborate inside the application:
 4. **`NeighborhoodAgent`**:
    - Evaluates proximity data for the buyer's lifestyle profile.
    - Computes neighborhood scores (distance to universities, parks, schools, pharmacies) out of 35 points.
-
-5. **`OntologyUpdateAgent`**:
-   - Performs modification and save commands directly on the OWL file using `OntologyService`.
 
 ### ACL JSON Message Schema
 Every JADE ACL message carries a JSON payload with a standard contract:
@@ -197,12 +194,12 @@ The web UI is responsive and styled using custom Bootstrap 5 grids, cards, and i
 ## 8. Ontology Manipulation Process
 
 When an admin uploads a CSV or edits properties:
-1. The request flows to `OntologyUpdateAgent`.
-2. The agent calls `OntologyService.upsertProperty()`.
-3. An OWL individual (`Property_[ID]`) is generated or updated.
+1. The controller calls `PropertyImportService`.
+2. `PropertyImportService` validates/parses input and calls `OntologyService` directly.
+3. `OntologyService.upsertProperty()` generates or updates an OWL individual (`Property_[ID]`).
 4. Data properties (e.g. price, area) are asserted.
 5. The system recalculates its profile suitability rules dynamically using application-level Java calculations and asserts the object property `suitableForProfile` (e.g., `Property_001 suitableForProfile FamilyProfile`).
-6. The updated ontology is serialized back to `plovdiv-real-estate.owl`.
+6. `OntologyService.save()` serializes the updated ontology back to `plovdiv-real-estate.owl`.
 
 ---
 
@@ -225,7 +222,7 @@ $$\text{Final Score (100 pts max)} = \text{Budget Fit (25 pts)} + \text{Property
 ## 10. Testing, Limitations, and Future Improvements
 
 ### Testing
-We maintain comprehensive unit and integration suites (22 tests passing):
+We maintain comprehensive unit and integration suites (23 tests passing):
 - `OntologyServiceTests`: Verifies OWL loading, property upserts, price updates, and suitability recalculations.
 - `AgentAclIntegrationTests`: Verifies thread-safe O2A searches, PropertyAgent timeouts, NeighborhoodAgent fallbacks, and agent log sqlite saves.
 - `CompareAndFavoritesTests`: Verifies SQLite favorites persistence and dynamic comparison table calculations.

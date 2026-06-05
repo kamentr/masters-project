@@ -45,16 +45,13 @@ public class UserRequestAgent extends Agent {
             }
         });
 
-        // Add behaviour to handle responses from RecommendationAgent or OntologyUpdateAgent
+        // Add behaviour to handle responses from RecommendationAgent
         MessageTemplate template = MessageTemplate.and(
                 MessageTemplate.or(
                         MessageTemplate.MatchPerformative(ACLMessage.INFORM),
                         MessageTemplate.MatchPerformative(ACLMessage.FAILURE)
                 ),
-                MessageTemplate.or(
-                        MessageTemplate.MatchSender(new AID("RecommendationAgent", AID.ISLOCALNAME)),
-                        MessageTemplate.MatchSender(new AID("OntologyUpdateAgent", AID.ISLOCALNAME))
-                )
+                MessageTemplate.MatchSender(new AID("RecommendationAgent", AID.ISLOCALNAME))
         );
         addBehaviour(new CyclicBehaviour(this) {
             @Override
@@ -74,18 +71,12 @@ public class UserRequestAgent extends Agent {
         try {
             ACLMessage aclReq = new ACLMessage(ACLMessage.REQUEST);
             
-            // Route to correct agent based on type
-            String receiverName = "RecommendationAgent";
-            if ("UPDATE_ONTOLOGY".equals(request.getType())) {
-                receiverName = "OntologyUpdateAgent";
-            }
-            
-            aclReq.addReceiver(new AID(receiverName, AID.ISLOCALNAME));
+            aclReq.addReceiver(new AID("RecommendationAgent", AID.ISLOCALNAME));
             aclReq.setContent(AgentUtils.toJson(request));
             aclReq.setConversationId(request.getRequestId());
 
             send(aclReq);
-            AgentUtils.logMessage(logRepository, request.getRequestId(), aclReq, "REQUEST: " + request.getType() + " sent to " + receiverName);
+            AgentUtils.logMessage(logRepository, request.getRequestId(), aclReq, "REQUEST: " + request.getType() + " sent to RecommendationAgent");
         } catch (Exception e) {
             logger.error("Failed to forward request", e);
             agentBridge.failRequest(request.getRequestId(), e.getMessage());

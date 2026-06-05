@@ -7,6 +7,7 @@ import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,7 @@ public class JadeManager {
     private final AgentBridge agentBridge;
 
     private Runtime rt;
+    @Getter
     private ContainerController mainContainer;
 
     public JadeManager(
@@ -61,7 +63,6 @@ public class JadeManager {
             // Start base agents
             startAgent("PropertyAgent", PropertyAgent.class.getName(), new Object[]{ontologyService, agentLogRepository});
             startAgent("NeighborhoodAgent", NeighborhoodAgent.class.getName(), new Object[]{ontologyService, agentLogRepository});
-            startAgent("OntologyUpdateAgent", OntologyUpdateAgent.class.getName(), new Object[]{ontologyService, agentLogRepository});
             startAgent("RecommendationAgent", RecommendationAgent.class.getName(), new Object[]{ontologyService, agentLogRepository});
             
             // Start UserRequestAgent and register its controller with AgentBridge
@@ -98,7 +99,4 @@ public class JadeManager {
         }
     }
 
-    public ContainerController getMainContainer() {
-        return mainContainer;
-    }
 }

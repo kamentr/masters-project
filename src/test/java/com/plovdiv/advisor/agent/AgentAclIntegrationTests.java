@@ -5,12 +5,10 @@ import com.plovdiv.advisor.dto.AgentMessage;
 import com.plovdiv.advisor.dto.BuyerProfile;
 import com.plovdiv.advisor.dto.Confidence;
 import com.plovdiv.advisor.dto.District;
-import com.plovdiv.advisor.dto.OntologyUpdateCommand;
 import com.plovdiv.advisor.dto.PropertyImportRow;
 import com.plovdiv.advisor.dto.RecommendationResult;
 import com.plovdiv.advisor.dto.SearchCriteria;
 import com.plovdiv.advisor.ontology.OntologyService;
-import com.plovdiv.advisor.ontology.PropertyOntologyRecord;
 import com.plovdiv.advisor.persistence.AgentLogRepository;
 import com.plovdiv.advisor.service.PropertyCsvParser;
 import jade.wrapper.AgentController;
@@ -33,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest
+@SpringBootTest(properties = "app.jade.main-port=12099")
 class AgentAclIntegrationTests {
 
     @Autowired
@@ -206,41 +204,4 @@ class AgentAclIntegrationTests {
         }
     }
 
-    @Test
-    void testOntologyUpdateAgent() throws Exception {
-        String requestId = UUID.randomUUID().toString();
-        
-        // Find an existing property ID to change price
-        List<String> propertyIds = ontologyService.findAllPropertyIds();
-        assertThat(propertyIds).isNotEmpty();
-        String targetId = propertyIds.get(0);
-
-        PropertyOntologyRecord originalRecord = ontologyService.findProperty(targetId).orElseThrow();
-        BigDecimal newPrice = originalRecord.priceEUR().add(new BigDecimal("10000"));
-
-        OntologyUpdateCommand cmd = new OntologyUpdateCommand(
-                "UPDATE_PRICE",
-                null,
-                targetId,
-                newPrice,
-                null
-        );
-
-        AgentMessage<OntologyUpdateCommand> request = new AgentMessage<>(requestId, "UPDATE_ONTOLOGY", cmd);
-        CompletableFuture<AgentMessage<?>> future = new CompletableFuture<>();
-        agentBridge.registerRequest(requestId, future);
-
-        // Send request
-        agentBridge.sendRequest(request);
-
-        // Wait for response
-        AgentMessage<?> response = future.get(8, TimeUnit.SECONDS);
-
-        assertThat(response.getRequestId()).isEqualTo(requestId);
-        assertThat(response.getPayload().toString()).contains("updated successfully");
-
-        // Verify updated in ontology
-        PropertyOntologyRecord updatedRecord = ontologyService.findProperty(targetId).orElseThrow();
-        assertThat(updatedRecord.priceEUR()).isEqualByComparingTo(newPrice);
-    }
 }

@@ -1,9 +1,6 @@
 package com.plovdiv.advisor.service;
 
-import com.plovdiv.advisor.agent.AgentBridge;
-import com.plovdiv.advisor.dto.AgentMessage;
 import com.plovdiv.advisor.dto.ImportBatchResult;
-import com.plovdiv.advisor.dto.OntologyUpdateCommand;
 import com.plovdiv.advisor.dto.PropertyImportRow;
 import com.plovdiv.advisor.ontology.OntologyService;
 import com.plovdiv.advisor.ontology.PropertyOntologyRecord;
@@ -21,20 +18,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class PropertyImportService {
 
-    private static final long AGENT_TIMEOUT_SECONDS = 8;
-
     private final PropertyCsvParser csvParser;
     private final ImportBatchRepository importBatchRepository;
     private final OntologyService ontologyService;
-    private final AgentBridge agentBridge;
 
     public ImportBatchResult importCsv(MultipartFile file) {
         String fileName = file.getOriginalFilename() != null && !file.getOriginalFilename().isBlank()
@@ -52,7 +43,8 @@ public class PropertyImportService {
         }
 
         try {
-            sendOntologyUpdate(new OntologyUpdateCommand("IMPORT", rows, null, null, null));
+            ontologyService.upsertProperties(rows);
+            ontologyService.save();
             return importBatchRepository.complete(pending.batchId(), rows.size(), rows.size());
         } catch (RuntimeException ex) {
             return importBatchRepository.fail(pending.batchId(), rows.size(), ex.getMessage());
@@ -72,23 +64,12 @@ public class PropertyImportService {
     }
 
     public void updateProperty(PropertyEditForm form) {
-        sendOntologyUpdate(new OntologyUpdateCommand("IMPORT", List.of(form.toImportRow()), null, null, null));
+        ontologyService.upsertProperty(form.toImportRow());
+        ontologyService.save();
     }
 
     public void markUnavailable(String propertyId) {
-        sendOntologyUpdate(new OntologyUpdateCommand("UPDATE_AVAILABILITY", null, propertyId, null, false));
-    }
-
-    private void sendOntologyUpdate(OntologyUpdateCommand command) {
-        String requestId = UUID.randomUUID().toString();
-        AgentMessage<OntologyUpdateCommand> request = new AgentMessage<>(requestId, "UPDATE_ONTOLOGY", command);
-        CompletableFuture<AgentMessage<?>> future = new CompletableFuture<>();
-        agentBridge.registerRequest(requestId, future);
-        agentBridge.sendRequest(request);
-        try {
-            future.get(AGENT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        } catch (Exception ex) {
-            throw new RuntimeException("Ontology update failed: " + ex.getMessage(), ex);
-        }
+        ontologyService.updateAvailability(propertyId, false);
+        ontologyService.save();
     }
 }

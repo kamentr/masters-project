@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Import Properties - Admin Console</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f6f7fb; color: #20242c; }
+        .app-shell { max-width: 1000px; margin: 0 auto; padding: 28px 18px 56px; }
+        .panel { background: #fff; border: 1px solid #dde2ea; border-radius: 8px; padding: 24px; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+<main class="app-shell">
+    <nav class="mb-4 d-flex gap-3 flex-wrap">
+        <a class="btn btn-sm btn-outline-secondary" th:href="@{/}">Home</a>
+        <a class="btn btn-sm btn-outline-secondary" th:href="@{/admin/properties}">Properties</a>
+        <a class="btn btn-sm btn-primary" th:href="@{/admin/import}">Import CSV</a>
+        <a class="btn btn-sm btn-outline-secondary" th:href="@{/admin/agents}">Agent Logs</a>
+    </nav>
+
+    <header class="topbar">
+        <div>
+            <h1 class="h3 mb-1">CSV Property Import</h1>
+            <p class="text-secondary mb-0">Populate the real estate advisor ontology and database from raw CSV records</p>
+        </div>
+    </header>
+
+    <div class="alert alert-success" th:if="${success}" th:text="${success}"></div>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <section class="panel">
+                <h2 class="h5 mb-3">Upload listings file</h2>
+                <form th:action="@{/admin/import}" method="post" enctype="multipart/form-data" class="d-grid gap-3">
+                    <div>
+                        <label class="form-label font-weight-600" for="file">Select properties-plovdiv.csv</label>
+                        <input class="form-control" id="file" type="file" name="file" accept=".csv,text/csv" required>
+                    </div>
+                    <button class="btn btn-primary w-100" type="submit">Start Parsing & Import</button>
+                </form>
+            </section>
+        </div>
+
+        <div class="col-md-6" th:if="${result}">
+            <section class="panel">
+                <h2 class="h5 mb-3">Batch import results</h2>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <tbody>
+                            <tr>
+                                <th>Batch ID</th>
+                                <td class="font-monospace text-secondary" th:text="${result.batchId()}">0</td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td>
+                                    <span class="badge text-bg-success" th:if="${result.status() == 'COMPLETED'}" th:text="${result.status()}">COMPLETED</span>
+                                    <span class="badge text-bg-danger" th:if="${result.status() == 'FAILED'}" th:text="${result.status()}">FAILED</span>
+                                    <span class="badge text-bg-warning" th:if="${result.status() != 'COMPLETED' && result.status() != 'FAILED'}" th:text="${result.status()}">RUNNING</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Total rows</th>
+                                <td th:text="${result.totalRows()}">0</td>
+                            </tr>
+                            <tr>
+                                <th>Successfully Imported</th>
+                                <td class="text-success font-weight-600" th:text="${result.importedRows()}">0</td>
+                            </tr>
+                            <tr>
+                                <th>Failed / Skipped</th>
+                                <td class="text-danger font-weight-600" th:text="${result.failedRows()}">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,73 @@
+id,title,type,district,priceEUR,areaSqM,rooms,bedrooms,floor,totalFloors,constructionType,yearBuilt,heatingType,hasElevator,hasParking,hasBalcony,latitude,longitude,isAvailable,distanceToSchool,distanceToKindergarten,distanceToUniversity,distanceToPark,distanceToTransport,distanceToHospital,distanceToPharmacy
+P001,3-room apartment in Center,Apartment,Center,82872,56,3,2,2,6,Brick,1976,Electric,false,false,true,42.143400,24.745100,true,333,291,397,239,163,737,211
+P002,4-room apartment in OldTown,Apartment,OldTown,93936,64,4,3,3,7,Panel,1977,Gas,true,true,true,42.150100,24.749300,true,416,362,494,298,206,874,272
+P003,5-room apartment in Kapana,Apartment,Kapana,105592,72,5,4,4,8,EPC,1978,District Heating,true,false,true,42.149900,24.748100,true,499,433,591,357,249,1011,333
+P004,5-room house in Kamenitsa,House,Kamenitsa,189284,158,5,3,0,2,Monolithic,1979,Air Conditioning,false,true,false,42.147300,24.769200,true,582,504,688,416,292,1148,394
+P005,3-room apartment in Karshiyaka,Apartment,Karshiyaka,108680,88,3,2,6,10,New Construction,1980,Central,true,false,true,42.160000,24.742400,true,665,575,785,475,335,1285,455
+P006,4-room apartment in Trakia,Apartment,Trakia,122112,96,4,3,7,11,Brick,1981,Electric,true,true,true,42.133400,24.792800,true,748,646,882,534,378,1422,516
+P007,5-room apartment in KuchukParis,Apartment,KuchukParis,136136,104,5,4,8,12,Panel,1982,Gas,true,false,true,42.127700,24.723700,true,831,717,979,593,421,1559,577
+P008,6-room house in Smirnenski,House,Smirnenski,164212,122,6,4,0,2,EPC,1983,District Heating,false,true,false,42.143600,24.704000,true,914,788,1076,652,464,1696,638
+P009,3-room apartment in Komatevo,Apartment,Komatevo,165960,120,3,2,4,6,Monolithic,1984,Air Conditioning,true,false,true,42.113800,24.696600,true,997,859,1173,711,507,1833,699
+P010,4-room apartment in Proslav,Apartment,Proslav,68160,48,4,3,4,7,New Construction,1985,Central,true,true,true,42.135800,24.670500,true,1080,930,1270,770,550,1970,760
+P011,5-room apartment in Ostromila,Apartment,Ostromila,81592,56,5,4,4,8,Brick,1986,Electric,true,false,true,42.117900,24.718000,true,1163,1001,1367,829,593,2107,821
+P012,4-room house in Belomorski,House,Belomorski,253980,170,4,2,0,2,Panel,1987,Gas,true,true,false,42.106200,24.731600,true,1246,1072,1464,888,636,2244,882
+P013,3-room apartment in Center,Apartment,Center,132232,72,3,2,4,10,EPC,1988,District Heating,true,false,true,42.146800,24.754600,true,1329,1143,1561,947,679,2381,943
+P014,4-room apartment in OldTown,Apartment,OldTown,147440,80,4,3,4,11,Monolithic,1989,Air Conditioning,true,true,true,42.153500,24.745500,true,1412,1214,1658,1006,722,2518,1004
+P015,5-room apartment in Kapana,Apartment,Kapana,163240,88,5,4,4,12,New Construction,1990,Central,true,false,true,42.144800,24.744300,true,1495,1285,1755,1065,765,2655,1065
+P016,5-room house in Kamenitsa,House,Kamenitsa,220028,134,5,3,0,2,Brick,1991,Electric,false,true,false,42.142200,24.765400,true,1578,1356,1852,1124,808,2792,1126
+P017,3-room apartment in Karshiyaka,Apartment,Karshiyaka,174616,104,3,2,6,6,Panel,1992,Gas,true,false,true,42.163400,24.738600,false,1661,1427,1949,1183,851,2929,1187
+P018,4-room apartment in Trakia,Apartment,Trakia,192192,112,4,3,5,7,EPC,1993,District Heating,true,true,true,42.136800,24.789000,true,1744,1498,2046,1242,894,3066,1248
+P019,5-room apartment in KuchukParis,Apartment,KuchukParis,210360,120,5,4,4,8,Monolithic,1994,Air Conditioning,true,false,true,42.131100,24.733200,true,1827,1569,2143,1301,937,3203,1309
+P020,6-room house in Smirnenski,House,Smirnenski,325780,182,6,4,0,2,New Construction,1995,Central,false,true,false,42.138500,24.713500,true,310,1640,2240,1360,980,3340,170
+P021,3-room apartment in Komatevo,Apartment,Komatevo,102312,56,3,2,2,10,Brick,1996,Electric,true,false,true,42.108700,24.692800,true,393,1711,2337,1419,123,3477,231
+P022,4-room apartment in Proslav,Apartment,Proslav,119296,64,4,3,1,11,Panel,1997,Gas,true,true,true,42.139200,24.666700,true,476,282,2434,1478,166,3614,292
+P023,5-room apartment in Ostromila,Apartment,Ostromila,75672,72,5,4,12,12,EPC,1998,District Heating,true,false,true,42.121300,24.714200,true,559,353,2531,1537,209,3751,353
+P024,4-room house in Belomorski,House,Belomorski,158848,146,4,2,0,2,Monolithic,1999,Air Conditioning,true,true,false,42.109600,24.727800,true,642,424,2628,196,252,688,414
+P025,3-room apartment in Center,Apartment,Center,121000,88,3,2,2,6,New Construction,2000,Central,false,false,true,42.141700,24.750800,true,725,495,2725,255,295,825,475
+P026,4-room apartment in OldTown,Apartment,OldTown,133552,96,4,3,6,7,Brick,2001,Electric,true,true,true,42.148400,24.755000,true,808,566,2822,314,338,962,536
+P027,5-room apartment in Kapana,Apartment,Kapana,146696,104,5,4,4,8,Panel,2002,Gas,true,false,true,42.148200,24.753800,true,891,637,319,373,381,1099,597
+P028,5-room house in Kamenitsa,House,Kamenitsa,135960,110,5,3,0,2,EPC,2003,District Heating,false,true,false,42.145600,24.761600,true,974,708,416,432,424,1236,658
+P029,3-room apartment in Karshiyaka,Apartment,Karshiyaka,152760,120,3,2,10,10,Monolithic,2004,Air Conditioning,true,false,true,42.166800,24.734800,true,1057,779,513,491,467,1373,719
+P030,4-room apartment in Trakia,Apartment,Trakia,62880,48,4,3,9,11,New Construction,2005,Central,true,true,true,42.131700,24.785200,true,1140,850,610,550,510,1510,780
+P031,5-room apartment in KuchukParis,Apartment,KuchukParis,75432,56,5,4,8,12,Brick,2006,Electric,true,false,true,42.126000,24.729400,true,1223,921,707,609,553,1647,841
+P032,6-room house in Smirnenski,House,Smirnenski,218672,158,6,4,0,2,Panel,2007,Gas,false,true,false,42.141900,24.709700,true,1306,992,804,668,596,1784,902
+P033,3-room apartment in Komatevo,Apartment,Komatevo,102312,72,3,2,4,6,EPC,2008,District Heating,true,false,true,42.112100,24.702300,true,1389,1063,901,727,639,1921,963
+P034,4-room apartment in Proslav,Apartment,Proslav,116640,80,4,3,7,7,Monolithic,2009,Air Conditioning,true,true,true,42.142600,24.676200,false,1472,1134,998,786,682,2058,1024
+P035,5-room apartment in Ostromila,Apartment,Ostromila,131560,88,5,4,4,8,New Construction,2010,Central,true,false,true,42.116200,24.710400,true,1555,1205,1095,845,725,2195,1085
+P036,4-room house in Belomorski,House,Belomorski,186904,122,4,2,0,2,Brick,2011,Electric,true,true,false,42.104500,24.724000,true,1638,1276,1192,904,768,2332,1146
+P037,3-room apartment in Center,Apartment,Center,185176,104,3,2,8,10,Panel,2012,Gas,true,false,true,42.145100,24.747000,true,1721,1347,1289,963,811,2469,1207
+P038,4-room apartment in OldTown,Apartment,OldTown,201872,112,4,3,6,11,EPC,2013,District Heating,true,true,true,42.151800,24.751200,true,1804,1418,1386,1022,854,2606,1268
+P039,5-room apartment in Kapana,Apartment,Kapana,219160,120,5,4,4,12,Monolithic,2014,Air Conditioning,true,false,true,42.151600,24.750000,true,287,1489,1483,1081,897,2743,1329
+P040,5-room house in Kamenitsa,House,Kamenitsa,285600,170,5,3,0,2,New Construction,2015,Central,false,true,false,42.140500,24.771100,true,370,1560,1580,1140,940,2880,190
+P041,3-room apartment in Karshiyaka,Apartment,Karshiyaka,96152,56,3,2,6,6,Brick,2016,Electric,true,false,true,42.161700,24.744300,true,453,1631,1677,1199,983,3017,251
+P042,4-room apartment in Trakia,Apartment,Trakia,112256,64,4,3,1,7,Panel,2017,Gas,true,true,true,42.135100,24.781400,true,536,1702,1774,1258,126,3154,312
+P043,5-room apartment in KuchukParis,Apartment,KuchukParis,128952,72,5,4,4,8,EPC,2018,District Heating,true,false,true,42.129400,24.725600,true,619,273,1871,1317,169,3291,373
+P044,6-room house in Smirnenski,House,Smirnenski,244952,134,6,4,0,2,Monolithic,2019,Air Conditioning,false,true,false,42.145300,24.705900,true,702,344,1968,1376,212,3428,434
+P045,3-room apartment in Komatevo,Apartment,Komatevo,164120,88,3,2,6,10,New Construction,2020,Central,true,false,true,42.107000,24.698500,true,785,415,2065,1435,255,3565,495
+P046,4-room apartment in Proslav,Apartment,Proslav,100992,96,4,3,3,11,Brick,2021,Electric,true,true,true,42.137500,24.672400,true,868,486,2162,1494,298,3702,556
+P047,5-room apartment in Ostromila,Apartment,Ostromila,113256,104,5,4,12,12,Panel,2022,Gas,true,false,true,42.119600,24.719900,true,951,557,2259,1553,341,639,617
+P048,4-room house in Belomorski,House,Belomorski,204932,182,4,2,0,2,EPC,2023,District Heating,true,true,false,42.107900,24.733500,true,1034,628,2356,212,384,776,678
+P049,3-room apartment in Center,Apartment,Center,161560,120,3,2,2,6,Monolithic,1975,Air Conditioning,false,false,true,42.148500,24.743200,true,1117,699,2453,271,427,913,739
+P050,4-room apartment in OldTown,Apartment,OldTown,79600,48,4,3,2,7,New Construction,1976,Central,true,true,true,42.146700,24.747400,true,1200,770,2550,330,470,1050,800
+P051,5-room apartment in Kapana,Apartment,Kapana,91272,56,5,4,4,8,Brick,1977,Electric,true,false,true,42.146500,24.746200,false,1283,841,2647,389,513,1187,861
+P052,5-room house in Kamenitsa,House,Kamenitsa,186004,146,5,3,0,2,Panel,1978,Gas,false,true,false,42.143900,24.767300,true,1366,912,2744,448,556,1324,922
+P053,3-room apartment in Karshiyaka,Apartment,Karshiyaka,94392,72,3,2,4,10,EPC,1979,District Heating,true,false,true,42.165100,24.740500,true,1449,983,2841,507,599,1461,983
+P054,4-room apartment in Trakia,Apartment,Trakia,107840,80,4,3,11,11,Monolithic,1980,Air Conditioning,true,true,true,42.138500,24.790900,true,1532,1054,338,566,642,1598,1044
+P055,5-room apartment in KuchukParis,Apartment,KuchukParis,121880,88,5,4,8,12,New Construction,1981,Central,true,false,true,42.124300,24.735100,true,1615,1125,435,625,685,1735,1105
+P056,6-room house in Smirnenski,House,Smirnenski,156420,110,6,4,0,2,Brick,1982,Electric,false,true,false,42.140200,24.702100,true,1698,1196,532,684,728,1872,1166
+P057,3-room apartment in Komatevo,Apartment,Komatevo,151736,104,3,2,4,6,Panel,1983,Gas,true,false,true,42.110400,24.694700,true,1781,1267,629,743,771,2009,1227
+P058,4-room apartment in Proslav,Apartment,Proslav,167552,112,4,3,3,7,EPC,1984,District Heating,true,true,true,42.140900,24.668600,true,264,1338,726,802,814,2146,1288
+P059,5-room apartment in Ostromila,Apartment,Ostromila,183960,120,5,4,4,8,Monolithic,1985,Air Conditioning,true,false,true,42.123000,24.716100,true,347,1409,823,861,857,2283,1349
+P060,4-room house in Belomorski,House,Belomorski,248060,158,4,2,0,2,New Construction,1986,Central,true,true,false,42.102800,24.729700,true,430,1480,920,920,900,2420,210
+P061,3-room apartment in Center,Apartment,Center,111992,56,3,2,2,10,Brick,1987,Electric,true,false,true,42.143400,24.752700,true,513,1551,1017,979,943,2557,271
+P062,4-room apartment in OldTown,Apartment,OldTown,127216,64,4,3,8,11,Panel,1988,Gas,true,true,true,42.150100,24.756900,true,596,1622,1114,1038,986,2694,332
+P063,5-room apartment in Kapana,Apartment,Kapana,143032,72,5,4,4,12,EPC,1989,District Heating,true,false,true,42.149900,24.742400,true,679,1693,1211,1097,129,2831,393
+P064,5-room house in Kamenitsa,House,Kamenitsa,209596,122,5,3,0,2,Monolithic,1990,Air Conditioning,false,true,false,42.147300,24.763500,true,762,264,1308,1156,172,2968,454
+P065,3-room apartment in Karshiyaka,Apartment,Karshiyaka,154440,88,3,2,6,6,New Construction,1991,Central,true,false,true,42.160000,24.736700,true,845,335,1405,1215,215,3105,515
+P066,4-room apartment in Trakia,Apartment,Trakia,172032,96,4,3,4,7,Brick,1992,Electric,true,true,true,42.133400,24.787100,true,928,406,1502,1274,258,3242,576
+P067,5-room apartment in KuchukParis,Apartment,KuchukParis,190216,104,5,4,4,8,Panel,1993,Gas,true,false,true,42.127700,24.731300,true,1011,477,1599,1333,301,3379,637
+P068,6-room house in Smirnenski,House,Smirnenski,317220,170,6,4,0,2,EPC,1994,District Heating,false,true,false,42.143600,24.711600,false,1094,548,1696,1392,344,3516,698
+P069,3-room apartment in Komatevo,Apartment,Komatevo,126360,120,3,2,10,10,Monolithic,1995,Air Conditioning,true,false,true,42.113800,24.704200,true,1177,619,1793,1451,387,3653,759
+P070,4-room apartment in Proslav,Apartment,Proslav,52320,48,4,3,5,11,New Construction,1996,Central,true,true,true,42.135800,24.664800,true,1260,690,1890,1510,430,3790,820
+P071,5-room apartment in Ostromila,Apartment,Ostromila,63112,56,5,4,12,12,Brick,1997,Electric,true,false,true,42.117900,24.712300,true,1343,761,1987,1569,473,727,881
+P072,4-room house in Belomorski,House,Belomorski,155976,134,4,2,0,2,Panel,1998,Gas,true,true,false,42.106200,24.725900,true,1426,832,2084,228,516,864,942

@@ -1,5 +1,6 @@
 package com.plovdiv.advisor.agent;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.plovdiv.advisor.dto.AgentMessage;
 import com.plovdiv.advisor.dto.OntologyUpdateCommand;
 import com.plovdiv.advisor.ontology.OntologyService;
@@ -50,7 +51,7 @@ public class OntologyUpdateAgent extends Agent {
         try {
             AgentUtils.logMessage(logRepository, requestId, msg, "REQUEST to update ontology received by OntologyUpdateAgent");
 
-            com.fasterxml.jackson.databind.JavaType type = AgentUtils.getMapper().getTypeFactory()
+            JavaType type = AgentUtils.getMapper().getTypeFactory()
                     .constructParametricType(AgentMessage.class, OntologyUpdateCommand.class);
             AgentMessage<OntologyUpdateCommand> agentMsg = AgentUtils.fromJson(msg.getContent(), type);
             OntologyUpdateCommand cmd = agentMsg.getPayload();

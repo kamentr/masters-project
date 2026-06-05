@@ -1,5 +1,6 @@
 package com.plovdiv.advisor.agent;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plovdiv.advisor.dto.AgentMessage;
 import com.plovdiv.advisor.dto.BuyerProfile;
 import com.plovdiv.advisor.dto.Confidence;
@@ -150,7 +151,7 @@ class AgentAclIntegrationTests {
             assertThat(results).isNotEmpty();
 
             // Verify fallback structure: check if results returned are not empty and first result's explanation indicates fallback
-            com.fasterxml.jackson.databind.ObjectMapper mapper = AgentUtils.getMapper();
+            ObjectMapper mapper = AgentUtils.getMapper();
             RecommendationResult firstResult = mapper.convertValue(results.get(0), RecommendationResult.class);
             
             assertThat(firstResult.confidence()).isEqualTo(Confidence.MEDIUM);

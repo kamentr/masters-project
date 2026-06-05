@@ -1,6 +1,7 @@
 package com.plovdiv.advisor.service;
 
 import com.plovdiv.advisor.dto.ConstructionType;
+import com.plovdiv.advisor.dto.Confidence;
 import com.plovdiv.advisor.dto.District;
 import com.plovdiv.advisor.dto.HeatingType;
 import com.plovdiv.advisor.dto.PropertyRecommendationView;
@@ -22,7 +23,7 @@ class MapServiceTests {
     void createsMarkersFromRecommendationViews() {
         PropertyOntologyRecord property = property("P777");
         List<PropertyRecommendationView> recommendations = List.of(
-                new PropertyRecommendationView(property, 91, com.plovdiv.advisor.dto.Confidence.HIGH, List.of("Within budget"))
+                new PropertyRecommendationView(property, 91, Confidence.HIGH, List.of("Within budget"))
         );
 
         var markers = mapService.markersForRecommendations(recommendations);

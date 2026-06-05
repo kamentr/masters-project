@@ -1,56 +1,39 @@
 package com.plovdiv.advisor.persistence;
 
 import com.plovdiv.advisor.dto.FeedbackEntry;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
 
-@Repository
-public class FeedbackRepository {
-    private final JdbcTemplate jdbcTemplate;
+public interface FeedbackRepository extends JpaRepository<FeedbackEntity, Long> {
 
-    public FeedbackRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    List<FeedbackEntity> findEntitiesByPropertyIdOrderByCreatedAtDesc(String propertyId);
+
+    default void save(String propertyId, int rating, String comment, boolean useful) {
+        FeedbackEntity entity = new FeedbackEntity();
+        entity.setPropertyId(propertyId);
+        entity.setRating(rating);
+        entity.setComment(comment);
+        entity.setUseful(useful ? 1 : 0);
+        save(entity);
     }
 
-    public void save(String propertyId, int rating, String comment, boolean useful) {
-        jdbcTemplate.update(
-                "INSERT INTO feedback (property_id, rating, comment, useful, created_at) VALUES (?, ?, ?, ?, ?)",
-                propertyId,
-                rating,
-                comment,
-                useful ? 1 : 0,
-                Instant.now().toString()
-        );
+    default List<FeedbackEntry> findByPropertyId(String propertyId) {
+        return findEntitiesByPropertyIdOrderByCreatedAtDesc(propertyId).stream()
+                .map(FeedbackRepository::toEntry)
+                .toList();
     }
 
-    public List<FeedbackEntry> findByPropertyId(String propertyId) {
-        return jdbcTemplate.query(
-                """
-                        SELECT id, user_id, property_id, rating, comment, useful, created_at
-                        FROM feedback
-                        WHERE property_id = ?
-                        ORDER BY created_at DESC
-                        """,
-                this::mapFeedback,
-                propertyId
-        );
-    }
-
-    private FeedbackEntry mapFeedback(ResultSet rs, int rowNum) throws SQLException {
-        Long userId = rs.getObject("user_id") == null ? null : rs.getLong("user_id");
+    private static FeedbackEntry toEntry(FeedbackEntity entity) {
         return new FeedbackEntry(
-                rs.getLong("id"),
-                userId,
-                rs.getString("property_id"),
-                rs.getInt("rating"),
-                rs.getString("comment"),
-                rs.getInt("useful") == 1,
-                Instant.parse(rs.getString("created_at"))
+                entity.getId(),
+                entity.getUserId(),
+                entity.getPropertyId(),
+                entity.getRating(),
+                entity.getComment(),
+                entity.getUseful() == 1,
+                Instant.parse(entity.getCreatedAt())
         );
     }
 }

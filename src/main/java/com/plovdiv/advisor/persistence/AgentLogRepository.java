@@ -1,63 +1,49 @@
 package com.plovdiv.advisor.persistence;
 
 import com.plovdiv.advisor.dto.AgentLogEntry;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
 
-@Repository
-public class AgentLogRepository {
-    private final JdbcTemplate jdbcTemplate;
+public interface AgentLogRepository extends JpaRepository<AgentLogEntity, Long> {
 
-    public AgentLogRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    List<AgentLogEntity> findByOrderByCreatedAtDescIdDesc(PageRequest pageRequest);
+
+    List<AgentLogEntity> findEntitiesByRequestIdOrderByCreatedAtAscIdAsc(String requestId);
+
+    default void save(String requestId, String sender, String receiver, String performative, String messageSummary) {
+        AgentLogEntity entity = new AgentLogEntity();
+        entity.setRequestId(requestId);
+        entity.setSender(sender);
+        entity.setReceiver(receiver);
+        entity.setPerformative(performative);
+        entity.setMessageSummary(messageSummary);
+        save(entity);
     }
 
-    public void save(String requestId, String sender, String receiver, String performative, String messageSummary) {
-        String sql = "INSERT INTO agent_logs (request_id, sender, receiver, performative, message_summary, created_at) " +
-                     "VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, requestId, sender, receiver, performative, messageSummary, Instant.now().toString());
+    default List<AgentLogEntry> findRecent(int limit) {
+        return findByOrderByCreatedAtDescIdDesc(PageRequest.of(0, Math.max(1, Math.min(500, limit)))).stream()
+                .map(AgentLogRepository::toEntry)
+                .toList();
     }
 
-    public List<AgentLogEntry> findRecent(int limit) {
-        return jdbcTemplate.query(
-                """
-                        SELECT id, request_id, sender, receiver, performative, message_summary, created_at
-                        FROM agent_logs
-                        ORDER BY datetime(created_at) DESC, id DESC
-                        LIMIT ?
-                        """,
-                this::mapEntry,
-                Math.max(1, Math.min(500, limit))
-        );
+    default List<AgentLogEntry> findByRequestId(String requestId) {
+        return findEntitiesByRequestIdOrderByCreatedAtAscIdAsc(requestId).stream()
+                .map(AgentLogRepository::toEntry)
+                .toList();
     }
 
-    public List<AgentLogEntry> findByRequestId(String requestId) {
-        return jdbcTemplate.query(
-                """
-                        SELECT id, request_id, sender, receiver, performative, message_summary, created_at
-                        FROM agent_logs
-                        WHERE request_id = ?
-                        ORDER BY datetime(created_at) ASC, id ASC
-                        """,
-                this::mapEntry,
-                requestId
-        );
-    }
-
-    private AgentLogEntry mapEntry(ResultSet rs, int rowNum) throws SQLException {
+    private static AgentLogEntry toEntry(AgentLogEntity entity) {
         return new AgentLogEntry(
-                rs.getLong("id"),
-                rs.getString("request_id"),
-                rs.getString("sender"),
-                rs.getString("receiver"),
-                rs.getString("performative"),
-                rs.getString("message_summary"),
-                Instant.parse(rs.getString("created_at"))
+                entity.getId(),
+                entity.getRequestId(),
+                entity.getSender(),
+                entity.getReceiver(),
+                entity.getPerformative(),
+                entity.getMessageSummary(),
+                Instant.parse(entity.getCreatedAt())
         );
     }
 }

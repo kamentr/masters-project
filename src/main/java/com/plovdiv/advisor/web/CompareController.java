@@ -9,6 +9,7 @@ import com.plovdiv.advisor.ontology.PropertyOntologyRecord;
 import com.plovdiv.advisor.persistence.FavoriteRepository;
 import com.plovdiv.advisor.persistence.SearchHistoryRepository;
 import com.plovdiv.advisor.service.RecommendationScoringService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,23 +24,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequiredArgsConstructor
 public class CompareController {
 
     private final OntologyService ontologyService;
     private final FavoriteRepository favoriteRepository;
     private final SearchHistoryRepository searchHistoryRepository;
     private final RecommendationScoringService scoringService;
-
-    public CompareController(
-            OntologyService ontologyService,
-            FavoriteRepository favoriteRepository,
-            SearchHistoryRepository searchHistoryRepository,
-            RecommendationScoringService scoringService) {
-        this.ontologyService = ontologyService;
-        this.favoriteRepository = favoriteRepository;
-        this.searchHistoryRepository = searchHistoryRepository;
-        this.scoringService = scoringService;
-    }
 
     @GetMapping("/compare")
     public String compare(@RequestParam(value = "ids", required = false) List<String> ids, Model model) {

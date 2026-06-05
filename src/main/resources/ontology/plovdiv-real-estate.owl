@@ -616,7 +616,7 @@
         <hasBedrooms rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</hasBedrooms>
         <hasDistanceToHospital rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">737</hasDistanceToHospital>
         <hasDistanceToKindergarten rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">291</hasDistanceToKindergarten>
-        <hasDistanceToPark rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">239</hasDistanceToPark>
+        <hasDistanceToPark rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">241</hasDistanceToPark>
         <hasDistanceToPharmacy rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">211</hasDistanceToPharmacy>
         <hasDistanceToSchool rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">333</hasDistanceToSchool>
         <hasDistanceToTransport rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">163</hasDistanceToTransport>

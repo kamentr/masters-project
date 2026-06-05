@@ -5,9 +5,11 @@ import com.plovdiv.advisor.dto.District;
 import com.plovdiv.advisor.dto.HeatingType;
 import com.plovdiv.advisor.dto.ImportBatchResult;
 import com.plovdiv.advisor.dto.PropertyType;
+import com.plovdiv.advisor.ontology.OntologyService;
 import com.plovdiv.advisor.service.AgentLogService;
 import com.plovdiv.advisor.service.PropertyImportService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,26 +19,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.plovdiv.advisor.ontology.OntologyService;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin")
+@RequiredArgsConstructor
 public class AdminPropertyController {
 
     private final PropertyImportService propertyImportService;
     private final AgentLogService agentLogService;
     private final OntologyService ontologyService;
-
-    public AdminPropertyController(
-            PropertyImportService propertyImportService,
-            AgentLogService agentLogService,
-            OntologyService ontologyService) {
-        this.propertyImportService = propertyImportService;
-        this.agentLogService = agentLogService;
-        this.ontologyService = ontologyService;
-    }
 
     @ModelAttribute
     void referenceData(Model model) {

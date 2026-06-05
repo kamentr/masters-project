@@ -1,5 +1,6 @@
 package com.plovdiv.advisor.agent;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.plovdiv.advisor.dto.AgentMessage;
 import com.plovdiv.advisor.dto.Confidence;
 import com.plovdiv.advisor.dto.NeighborhoodRequest;
@@ -98,7 +99,7 @@ public class RecommendationAgent extends Agent {
         try {
             AgentUtils.logMessage(logRepository, requestId, msg, "REQUEST SEARCH_PROPERTIES received by RecommendationAgent");
 
-            com.fasterxml.jackson.databind.JavaType type = AgentUtils.getMapper().getTypeFactory()
+            JavaType type = AgentUtils.getMapper().getTypeFactory()
                     .constructParametricType(AgentMessage.class, SearchCriteria.class);
             AgentMessage<SearchCriteria> agentMsg = AgentUtils.fromJson(msg.getContent(), type);
             SearchCriteria criteria = agentMsg.getPayload();
@@ -159,7 +160,7 @@ public class RecommendationAgent extends Agent {
                 return;
             }
 
-            com.fasterxml.jackson.databind.JavaType type = AgentUtils.getMapper().getTypeFactory()
+            JavaType type = AgentUtils.getMapper().getTypeFactory()
                     .constructParametricType(AgentMessage.class, List.class);
             AgentMessage<List<Map<String, Object>>> agentMsg = AgentUtils.fromJson(msg.getContent(), type);
             List<Map<String, Object>> candidatesRaw = agentMsg.getPayload();
@@ -235,7 +236,7 @@ public class RecommendationAgent extends Agent {
                 return;
             }
 
-            com.fasterxml.jackson.databind.JavaType type = AgentUtils.getMapper().getTypeFactory()
+            JavaType type = AgentUtils.getMapper().getTypeFactory()
                     .constructParametricType(AgentMessage.class, List.class);
             AgentMessage<List<Map<String, Object>>> agentMsg = AgentUtils.fromJson(msg.getContent(), type);
             List<Map<String, Object>> rawScores = agentMsg.getPayload();

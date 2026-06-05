@@ -2,17 +2,15 @@ package com.plovdiv.advisor.service;
 
 import com.plovdiv.advisor.dto.FeedbackEntry;
 import com.plovdiv.advisor.persistence.FeedbackRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
-
-    public FeedbackService(FeedbackRepository feedbackRepository) {
-        this.feedbackRepository = feedbackRepository;
-    }
 
     public void save(String propertyId, int rating, String comment, boolean useful) {
         int normalizedRating = Math.max(1, Math.min(5, rating));

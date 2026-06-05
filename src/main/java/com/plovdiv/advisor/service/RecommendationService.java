@@ -4,6 +4,7 @@ import com.plovdiv.advisor.agent.AgentBridge;
 import com.plovdiv.advisor.dto.AgentMessage;
 import com.plovdiv.advisor.dto.RecommendationResult;
 import com.plovdiv.advisor.dto.SearchCriteria;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,15 +13,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@RequiredArgsConstructor
 public class RecommendationService {
 
     private static final long AGENT_TIMEOUT_SECONDS = 8;
 
     private final AgentBridge agentBridge;
-
-    public RecommendationService(AgentBridge agentBridge) {
-        this.agentBridge = agentBridge;
-    }
 
     public List<RecommendationResult> search(SearchCriteria criteria) {
         String requestId = UUID.randomUUID().toString();

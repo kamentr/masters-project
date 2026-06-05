@@ -1,5 +1,6 @@
 package com.plovdiv.advisor.agent;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.plovdiv.advisor.dto.AgentMessage;
 import com.plovdiv.advisor.dto.NeighborhoodRequest;
 import com.plovdiv.advisor.dto.NeighborhoodScore;
@@ -56,7 +57,7 @@ public class NeighborhoodAgent extends Agent {
         try {
             AgentUtils.logMessage(logRepository, requestId, msg, "REQUEST to score neighborhood/amenities received by NeighborhoodAgent");
 
-            com.fasterxml.jackson.databind.JavaType type = AgentUtils.getMapper().getTypeFactory()
+            JavaType type = AgentUtils.getMapper().getTypeFactory()
                     .constructParametricType(AgentMessage.class, NeighborhoodRequest.class);
             AgentMessage<NeighborhoodRequest> agentMsg = AgentUtils.fromJson(msg.getContent(), type);
             NeighborhoodRequest req = agentMsg.getPayload();

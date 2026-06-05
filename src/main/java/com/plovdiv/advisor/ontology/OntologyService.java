@@ -9,8 +9,11 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -25,12 +28,15 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class OntologyService {
@@ -120,7 +126,7 @@ public class OntologyService {
         OWLNamedIndividual property = propertyIndividual(propertyId);
         replaceDataProperty(property, "hasPriceEUR", dataFactory.getOWLLiteral(priceEUR.toPlainString(), OWL2Datatype.XSD_DECIMAL));
         BigDecimal area = decimalValue(property, "hasAreaSqM");
-        BigDecimal pricePerSqM = priceEUR.divide(area, 2, java.math.RoundingMode.HALF_UP);
+        BigDecimal pricePerSqM = priceEUR.divide(area, 2, RoundingMode.HALF_UP);
         replaceDataProperty(property, "hasPricePerSqM", dataFactory.getOWLLiteral(pricePerSqM.toPlainString(), OWL2Datatype.XSD_DECIMAL));
     }
 
@@ -130,7 +136,7 @@ public class OntologyService {
         if (!available) {
             Set<OWLAxiom> suitabilityAssertions = ontology.objectPropertyAssertionAxioms(property)
                     .filter(axiom -> axiom.getProperty().equals(objectProperty("suitableForProfile")))
-                    .collect(java.util.stream.Collectors.toSet());
+                    .collect(Collectors.toSet());
             manager.removeAxioms(ontology, suitabilityAssertions);
         }
     }
@@ -195,15 +201,15 @@ public class OntologyService {
     }
 
     private void removeSubjectAssertions(OWLNamedIndividual property) {
-        Set<OWLAxiom> axioms = ontology.axioms(property).collect(java.util.stream.Collectors.toSet());
+        Set<OWLAxiom> axioms = ontology.axioms(property).collect(Collectors.toSet());
         manager.removeAxioms(ontology, axioms);
     }
 
-    private void replaceDataProperty(OWLNamedIndividual subject, String propertyName, org.semanticweb.owlapi.model.OWLLiteral literal) {
+    private void replaceDataProperty(OWLNamedIndividual subject, String propertyName, OWLLiteral literal) {
         OWLDataProperty dataProperty = dataProperty(propertyName);
         Set<OWLAxiom> existing = ontology.dataPropertyAssertionAxioms(subject)
                 .filter(axiom -> axiom.getProperty().equals(dataProperty))
-                .collect(java.util.stream.Collectors.toSet());
+                .collect(Collectors.toSet());
         manager.removeAxioms(ontology, existing);
         manager.addAxiom(ontology, dataFactory.getOWLDataPropertyAssertionAxiom(dataProperty, subject, literal));
     }
@@ -264,7 +270,7 @@ public class OntologyService {
         return EntitySearcher.getObjectPropertyValues(property, objectProperty("suitableForProfile"), ontology)
                 .filter(value -> value.asOWLNamedIndividual().isNamed())
                 .map(value -> shortForm(value.asOWLNamedIndividual().getIRI()))
-                .collect(java.util.stream.Collectors.toCollection(java.util.LinkedHashSet::new));
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     private String objectValueToken(OWLNamedIndividual property, String objectPropertyName, String prefix) {
@@ -290,7 +296,7 @@ public class OntologyService {
         return Boolean.parseBoolean(literal(property, propertyName).getLiteral());
     }
 
-    private org.semanticweb.owlapi.model.OWLLiteral literal(OWLNamedIndividual property, String propertyName) {
+    private OWLLiteral literal(OWLNamedIndividual property, String propertyName) {
         return EntitySearcher.getDataPropertyValues(property, dataProperty(propertyName), ontology)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Missing data property " + propertyName));
@@ -330,8 +336,8 @@ public class OntologyService {
 
     public synchronized List<String> findAllPropertyIds() {
         return ontology.classAssertionAxioms(owlClass("Property"))
-                .map(org.semanticweb.owlapi.model.OWLClassAssertionAxiom::getIndividual)
-                .filter(org.semanticweb.owlapi.model.OWLIndividual::isNamed)
+                .map(OWLClassAssertionAxiom::getIndividual)
+                .filter(OWLIndividual::isNamed)
                 .map(ind -> shortForm(ind.asOWLNamedIndividual().getIRI()).replaceFirst("^Property_", ""))
                 .distinct()
                 .toList();

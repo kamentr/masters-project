@@ -9,6 +9,7 @@ import com.plovdiv.advisor.ontology.OntologyService;
 import com.plovdiv.advisor.ontology.PropertyOntologyRecord;
 import com.plovdiv.advisor.persistence.ImportBatchRepository;
 import com.plovdiv.advisor.web.PropertyEditForm;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +18,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +26,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@RequiredArgsConstructor
 public class PropertyImportService {
 
     private static final long AGENT_TIMEOUT_SECONDS = 8;
@@ -32,17 +35,6 @@ public class PropertyImportService {
     private final ImportBatchRepository importBatchRepository;
     private final OntologyService ontologyService;
     private final AgentBridge agentBridge;
-
-    public PropertyImportService(
-            PropertyCsvParser csvParser,
-            ImportBatchRepository importBatchRepository,
-            OntologyService ontologyService,
-            AgentBridge agentBridge) {
-        this.csvParser = csvParser;
-        this.importBatchRepository = importBatchRepository;
-        this.ontologyService = ontologyService;
-        this.agentBridge = agentBridge;
-    }
 
     public ImportBatchResult importCsv(MultipartFile file) {
         String fileName = file.getOriginalFilename() != null && !file.getOriginalFilename().isBlank()
@@ -71,7 +63,7 @@ public class PropertyImportService {
         return ontologyService.findAllPropertyIds().stream()
                 .map(ontologyService::findProperty)
                 .flatMap(Optional::stream)
-                .sorted(java.util.Comparator.comparing(PropertyOntologyRecord::id))
+                .sorted(Comparator.comparing(PropertyOntologyRecord::id))
                 .toList();
     }
 

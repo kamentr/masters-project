@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,7 +63,7 @@ public class PropertyCsvParser {
                 throw new CsvImportValidationException(errors);
             }
 
-            Set<String> seenIds = new java.util.HashSet<>();
+            Set<String> seenIds = new HashSet<>();
             for (CSVRecord record : parser) {
                 try {
                     PropertyImportRow row = parseRecord(record);

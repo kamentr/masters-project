@@ -1,5 +1,6 @@
 package com.plovdiv.advisor.agent;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.plovdiv.advisor.dto.AgentMessage;
 import com.plovdiv.advisor.dto.PropertyCandidate;
 import com.plovdiv.advisor.dto.SearchCriteria;
@@ -56,7 +57,7 @@ public class PropertyAgent extends Agent {
         try {
             AgentUtils.logMessage(logRepository, requestId, msg, "REQUEST to filter properties received by PropertyAgent");
 
-            com.fasterxml.jackson.databind.JavaType type = AgentUtils.getMapper().getTypeFactory()
+            JavaType type = AgentUtils.getMapper().getTypeFactory()
                     .constructParametricType(AgentMessage.class, SearchCriteria.class);
             AgentMessage<SearchCriteria> agentMsg = AgentUtils.fromJson(msg.getContent(), type);
             SearchCriteria criteria = agentMsg.getPayload();

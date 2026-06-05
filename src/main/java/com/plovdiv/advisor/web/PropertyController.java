@@ -4,6 +4,7 @@ import com.plovdiv.advisor.ontology.PropertyOntologyRecord;
 import com.plovdiv.advisor.ontology.OntologyService;
 import com.plovdiv.advisor.service.FeedbackService;
 import com.plovdiv.advisor.service.MapService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,16 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 @Controller
+@RequiredArgsConstructor
 public class PropertyController {
     private final OntologyService ontologyService;
     private final FeedbackService feedbackService;
     private final MapService mapService;
-
-    public PropertyController(OntologyService ontologyService, FeedbackService feedbackService, MapService mapService) {
-        this.ontologyService = ontologyService;
-        this.feedbackService = feedbackService;
-        this.mapService = mapService;
-    }
 
     @GetMapping("/properties/{id}")
     public String detail(@PathVariable String id, Model model) {

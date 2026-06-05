@@ -1,5 +1,6 @@
 package com.plovdiv.advisor.agent;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.plovdiv.advisor.dto.AgentMessage;
 import com.plovdiv.advisor.persistence.AgentLogRepository;
 import jade.core.AID;
@@ -98,7 +99,7 @@ public class UserRequestAgent extends Agent {
         try {
             AgentUtils.logMessage(logRepository, requestId, msg, "RESPONSE received from " + sender + ": performative=" + ACLMessage.getPerformative(msg.getPerformative()));
             
-            com.fasterxml.jackson.databind.JavaType type = AgentUtils.getMapper().getTypeFactory()
+            JavaType type = AgentUtils.getMapper().getTypeFactory()
                     .constructParametricType(AgentMessage.class, Object.class);
             AgentMessage<?> response = AgentUtils.fromJson(msg.getContent(), type);
 

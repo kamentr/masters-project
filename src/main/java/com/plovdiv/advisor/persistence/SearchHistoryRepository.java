@@ -3,47 +3,37 @@ package com.plovdiv.advisor.persistence;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plovdiv.advisor.dto.SearchCriteria;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 
-@Repository
-public class SearchHistoryRepository {
-    private final JdbcTemplate jdbcTemplate;
-    private final ObjectMapper objectMapper;
+public interface SearchHistoryRepository extends JpaRepository<SearchHistoryEntity, Long> {
 
-    public SearchHistoryRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.objectMapper = new ObjectMapper().findAndRegisterModules();
-    }
+    ObjectMapper OBJECT_MAPPER = new ObjectMapper().findAndRegisterModules();
 
-    public void save(SearchCriteria criteria) {
+    Optional<SearchHistoryEntity> findFirstByOrderByIdDesc();
+
+    default void save(SearchCriteria criteria) {
         try {
-            jdbcTemplate.update(
-                    "INSERT INTO search_history (criteria_json, selected_profile, created_at) VALUES (?, ?, ?)",
-                    objectMapper.writeValueAsString(criteria),
-                    criteria.profile() == null ? "" : criteria.profile().name(),
-                    Instant.now().toString()
-            );
+            SearchHistoryEntity entity = new SearchHistoryEntity();
+            entity.setCriteriaJson(OBJECT_MAPPER.writeValueAsString(criteria));
+            entity.setSelectedProfile(criteria.profile() == null ? "" : criteria.profile().name());
+            save(entity);
         } catch (JsonProcessingException ex) {
             throw new IllegalStateException("Failed to serialize search criteria", ex);
         }
     }
 
-    public Optional<SearchCriteria> findLatest() {
-        List<SearchCriteria> list = jdbcTemplate.query(
-                "SELECT criteria_json FROM search_history ORDER BY id DESC LIMIT 1",
-                (rs, rowNum) -> {
-                    try {
-                        return objectMapper.readValue(rs.getString("criteria_json"), SearchCriteria.class);
-                    } catch (Exception e) {
-                        return null;
-                    }
-                }
-        );
-        return list.isEmpty() || list.get(0) == null ? Optional.empty() : Optional.of(list.get(0));
+    default Optional<SearchCriteria> findLatest() {
+        return findFirstByOrderByIdDesc()
+                .flatMap(SearchHistoryRepository::toCriteria);
+    }
+
+    private static Optional<SearchCriteria> toCriteria(SearchHistoryEntity entity) {
+        try {
+            return Optional.of(OBJECT_MAPPER.readValue(entity.getCriteriaJson(), SearchCriteria.class));
+        } catch (Exception ex) {
+            return Optional.empty();
+        }
     }
 }

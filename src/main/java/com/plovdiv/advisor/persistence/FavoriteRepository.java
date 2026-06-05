@@ -1,45 +1,43 @@
 package com.plovdiv.advisor.persistence;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Repository
-public class FavoriteRepository {
-    private final JdbcTemplate jdbcTemplate;
+public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Long> {
 
-    public FavoriteRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    long DEMO_USER_ID = 1L;
+
+    boolean existsByUserIdAndPropertyId(Long userId, String propertyId);
+
+    List<FavoriteEntity> findByUserIdOrderByIdAsc(Long userId);
+
+    @Transactional
+    void deleteByUserIdAndPropertyId(Long userId, String propertyId);
+
+    @Transactional
+    default void addFavorite(String propertyId) {
+        if (!existsByUserIdAndPropertyId(DEMO_USER_ID, propertyId)) {
+            FavoriteEntity entity = new FavoriteEntity();
+            entity.setUserId(DEMO_USER_ID);
+            entity.setPropertyId(propertyId);
+            save(entity);
+        }
     }
 
-    public void addFavorite(String propertyId) {
-        jdbcTemplate.update(
-                "INSERT OR IGNORE INTO favorites (user_id, property_id) VALUES (1, ?)",
-                propertyId
-        );
+    @Transactional
+    default void removeFavorite(String propertyId) {
+        deleteByUserIdAndPropertyId(DEMO_USER_ID, propertyId);
     }
 
-    public void removeFavorite(String propertyId) {
-        jdbcTemplate.update(
-                "DELETE FROM favorites WHERE user_id = 1 AND property_id = ?",
-                propertyId
-        );
+    default List<String> getFavoritePropertyIds() {
+        return findByUserIdOrderByIdAsc(DEMO_USER_ID).stream()
+                .map(FavoriteEntity::getPropertyId)
+                .toList();
     }
 
-    public List<String> getFavoritePropertyIds() {
-        return jdbcTemplate.queryForList(
-                "SELECT property_id FROM favorites WHERE user_id = 1",
-                String.class
-        );
-    }
-
-    public boolean isFavorite(String propertyId) {
-        Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM favorites WHERE user_id = 1 AND property_id = ?",
-                Integer.class,
-                propertyId
-        );
-        return count != null && count > 0;
+    default boolean isFavorite(String propertyId) {
+        return existsByUserIdAndPropertyId(DEMO_USER_ID, propertyId);
     }
 }

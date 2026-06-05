@@ -5,11 +5,15 @@ import com.plovdiv.advisor.dto.ConstructionType;
 import com.plovdiv.advisor.dto.District;
 import com.plovdiv.advisor.dto.HeatingType;
 import com.plovdiv.advisor.dto.SearchCriteria;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public class SearchForm {
     private BuyerProfile profile = BuyerProfile.FAMILY;
     private BigDecimal maxBudgetEUR = new BigDecimal("150000");
@@ -39,91 +43,4 @@ public class SearchForm {
         );
     }
 
-    public BuyerProfile getProfile() {
-        return profile;
-    }
-
-    public void setProfile(BuyerProfile profile) {
-        this.profile = profile;
-    }
-
-    public BigDecimal getMaxBudgetEUR() {
-        return maxBudgetEUR;
-    }
-
-    public void setMaxBudgetEUR(BigDecimal maxBudgetEUR) {
-        this.maxBudgetEUR = maxBudgetEUR;
-    }
-
-    public List<District> getDistricts() {
-        return districts;
-    }
-
-    public void setDistricts(List<District> districts) {
-        this.districts = districts;
-    }
-
-    public int getMinRooms() {
-        return minRooms;
-    }
-
-    public void setMinRooms(int minRooms) {
-        this.minRooms = minRooms;
-    }
-
-    public int getMinBedrooms() {
-        return minBedrooms;
-    }
-
-    public void setMinBedrooms(int minBedrooms) {
-        this.minBedrooms = minBedrooms;
-    }
-
-    public ConstructionType getConstructionType() {
-        return constructionType;
-    }
-
-    public void setConstructionType(ConstructionType constructionType) {
-        this.constructionType = constructionType;
-    }
-
-    public HeatingType getHeatingType() {
-        return heatingType;
-    }
-
-    public void setHeatingType(HeatingType heatingType) {
-        this.heatingType = heatingType;
-    }
-
-    public boolean isRequiresElevator() {
-        return requiresElevator;
-    }
-
-    public void setRequiresElevator(boolean requiresElevator) {
-        this.requiresElevator = requiresElevator;
-    }
-
-    public boolean isRequiresParking() {
-        return requiresParking;
-    }
-
-    public void setRequiresParking(boolean requiresParking) {
-        this.requiresParking = requiresParking;
-    }
-
-    public boolean isRequiresBalcony() {
-        return requiresBalcony;
-    }
-
-    public void setRequiresBalcony(boolean requiresBalcony) {
-        this.requiresBalcony = requiresBalcony;
-    }
-
-    public List<String> getPriorities() {
-        return priorities;
-    }
-
-    public void setPriorities(List<String> priorities) {
-        this.priorities = priorities;
-    }
 }

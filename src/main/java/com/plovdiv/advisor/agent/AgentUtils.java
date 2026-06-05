@@ -1,11 +1,15 @@
 package com.plovdiv.advisor.agent;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plovdiv.advisor.persistence.AgentLogRepository;
+import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Iterator;
 
 public class AgentUtils {
     private static final Logger logger = LoggerFactory.getLogger(AgentUtils.class);
@@ -21,16 +25,7 @@ public class AgentUtils {
         }
     }
 
-    public static <T> T fromJson(String json, Class<T> clazz) {
-        try {
-            return objectMapper.readValue(json, clazz);
-        } catch (JsonProcessingException e) {
-            logger.error("Failed to parse JSON string: " + json, e);
-            throw new RuntimeException("JSON parsing error", e);
-        }
-    }
-
-    public static <T> T fromJson(String json, com.fasterxml.jackson.databind.JavaType javaType) {
+    public static <T> T fromJson(String json, JavaType javaType) {
         try {
             return objectMapper.readValue(json, javaType);
         } catch (JsonProcessingException e) {
@@ -48,9 +43,9 @@ public class AgentUtils {
         try {
             String sender = msg.getSender() != null ? msg.getSender().getLocalName() : "unknown";
             String receiver = "unknown";
-            java.util.Iterator<?> iter = msg.getAllReceiver();
+            Iterator<?> iter = msg.getAllReceiver();
             if (iter.hasNext()) {
-                jade.core.AID aid = (jade.core.AID) iter.next();
+                AID aid = (AID) iter.next();
                 receiver = aid.getLocalName();
             }
             String performative = ACLMessage.getPerformative(msg.getPerformative());

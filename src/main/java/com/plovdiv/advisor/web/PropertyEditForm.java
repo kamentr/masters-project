@@ -11,9 +11,13 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
+@Getter
+@Setter
 public class PropertyEditForm {
 
     @NotBlank
@@ -156,57 +160,4 @@ public class PropertyEditForm {
     public boolean hasConsistentFloors() {
         return floor <= totalFloors;
     }
-
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-    public PropertyType getType() { return type; }
-    public void setType(PropertyType type) { this.type = type; }
-    public District getDistrict() { return district; }
-    public void setDistrict(District district) { this.district = district; }
-    public BigDecimal getPriceEUR() { return priceEUR; }
-    public void setPriceEUR(BigDecimal priceEUR) { this.priceEUR = priceEUR; }
-    public BigDecimal getAreaSqM() { return areaSqM; }
-    public void setAreaSqM(BigDecimal areaSqM) { this.areaSqM = areaSqM; }
-    public int getRooms() { return rooms; }
-    public void setRooms(int rooms) { this.rooms = rooms; }
-    public int getBedrooms() { return bedrooms; }
-    public void setBedrooms(int bedrooms) { this.bedrooms = bedrooms; }
-    public int getFloor() { return floor; }
-    public void setFloor(int floor) { this.floor = floor; }
-    public int getTotalFloors() { return totalFloors; }
-    public void setTotalFloors(int totalFloors) { this.totalFloors = totalFloors; }
-    public ConstructionType getConstructionType() { return constructionType; }
-    public void setConstructionType(ConstructionType constructionType) { this.constructionType = constructionType; }
-    public int getYearBuilt() { return yearBuilt; }
-    public void setYearBuilt(int yearBuilt) { this.yearBuilt = yearBuilt; }
-    public HeatingType getHeatingType() { return heatingType; }
-    public void setHeatingType(HeatingType heatingType) { this.heatingType = heatingType; }
-    public boolean isHasElevator() { return hasElevator; }
-    public void setHasElevator(boolean hasElevator) { this.hasElevator = hasElevator; }
-    public boolean isHasParking() { return hasParking; }
-    public void setHasParking(boolean hasParking) { this.hasParking = hasParking; }
-    public boolean isHasBalcony() { return hasBalcony; }
-    public void setHasBalcony(boolean hasBalcony) { this.hasBalcony = hasBalcony; }
-    public BigDecimal getLatitude() { return latitude; }
-    public void setLatitude(BigDecimal latitude) { this.latitude = latitude; }
-    public BigDecimal getLongitude() { return longitude; }
-    public void setLongitude(BigDecimal longitude) { this.longitude = longitude; }
-    public boolean isAvailable() { return available; }
-    public void setAvailable(boolean available) { this.available = available; }
-    public int getDistanceToSchool() { return distanceToSchool; }
-    public void setDistanceToSchool(int distanceToSchool) { this.distanceToSchool = distanceToSchool; }
-    public int getDistanceToKindergarten() { return distanceToKindergarten; }
-    public void setDistanceToKindergarten(int distanceToKindergarten) { this.distanceToKindergarten = distanceToKindergarten; }
-    public int getDistanceToUniversity() { return distanceToUniversity; }
-    public void setDistanceToUniversity(int distanceToUniversity) { this.distanceToUniversity = distanceToUniversity; }
-    public int getDistanceToPark() { return distanceToPark; }
-    public void setDistanceToPark(int distanceToPark) { this.distanceToPark = distanceToPark; }
-    public int getDistanceToTransport() { return distanceToTransport; }
-    public void setDistanceToTransport(int distanceToTransport) { this.distanceToTransport = distanceToTransport; }
-    public int getDistanceToHospital() { return distanceToHospital; }
-    public void setDistanceToHospital(int distanceToHospital) { this.distanceToHospital = distanceToHospital; }
-    public int getDistanceToPharmacy() { return distanceToPharmacy; }
-    public void setDistanceToPharmacy(int distanceToPharmacy) { this.distanceToPharmacy = distanceToPharmacy; }
 }

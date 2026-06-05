@@ -12,6 +12,7 @@ import com.plovdiv.advisor.persistence.SearchHistoryRepository;
 import com.plovdiv.advisor.service.MapService;
 import com.plovdiv.advisor.service.RecommendationException;
 import com.plovdiv.advisor.service.RecommendationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,24 +20,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
     private final RecommendationService recommendationService;
     private final OntologyService ontologyService;
     private final MapService mapService;
     private final SearchHistoryRepository searchHistoryRepository;
-
-    public HomeController(
-            RecommendationService recommendationService,
-            OntologyService ontologyService,
-            MapService mapService,
-            SearchHistoryRepository searchHistoryRepository) {
-        this.recommendationService = recommendationService;
-        this.ontologyService = ontologyService;
-        this.mapService = mapService;
-        this.searchHistoryRepository = searchHistoryRepository;
-    }
 
     @ModelAttribute("profiles")
     public BuyerProfile[] profiles() {
@@ -80,7 +72,7 @@ public class HomeController {
             searchHistoryRepository.save(criteria);
             List<PropertyRecommendationView> recommendations = recommendationService.search(criteria).stream()
                     .map(this::toView)
-                    .flatMap(java.util.Optional::stream)
+                    .flatMap(Optional::stream)
                     .toList();
             model.addAttribute("recommendations", recommendations);
             model.addAttribute("mapMarkers", mapService.markersForRecommendations(recommendations));
@@ -93,7 +85,7 @@ public class HomeController {
         return "search/results";
     }
 
-    private java.util.Optional<PropertyRecommendationView> toView(RecommendationResult result) {
+    private Optional<PropertyRecommendationView> toView(RecommendationResult result) {
         return ontologyService.findProperty(result.propertyId())
                 .map(property -> new PropertyRecommendationView(
                         property,

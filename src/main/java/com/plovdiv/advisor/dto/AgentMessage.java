@@ -33,4 +33,12 @@ public class AgentMessage<T> {
     public void setErrors(List<String> errors) {
         this.errors = errors != null ? errors : new ArrayList<>();
     }
+
+    public boolean hasErrors() {
+        return errors != null && !errors.isEmpty();
+    }
+
+    public String errorSummary() {
+        return hasErrors() ? String.join("; ", errors) : "";
+    }
 }

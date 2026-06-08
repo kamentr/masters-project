@@ -30,40 +30,51 @@ public class UserRequestAgent extends Agent {
         // Enable O2A communication so Spring can send requests to this agent
         setEnabledO2ACommunication(true, 100);
 
-        // Add behaviour to read Spring requests from O2A queue
-        addBehaviour(new CyclicBehaviour(this) {
-            @Override
-            public void action() {
-                Object obj = myAgent.getO2AObject();
-                if (obj != null) {
-                    if (obj instanceof AgentMessage<?> request) {
-                        handleIncomingSpringRequest(request);
-                    }
-                } else {
-                    block();
-                }
-            }
-        });
+        // Two jobs: read Spring requests off the O2A queue, and relay agent responses back to Spring.
+        addBehaviour(new O2ARequestReader(this));
+        addBehaviour(new AgentResponseReader(this));
+    }
 
-        // Add behaviour to handle responses from RecommendationAgent
-        MessageTemplate template = MessageTemplate.and(
+    /** Reads requests handed in from the Spring side via the O2A queue and forwards them to the agents. */
+    private class O2ARequestReader extends CyclicBehaviour {
+        O2ARequestReader(Agent agent) {
+            super(agent);
+        }
+
+        @Override
+        public void action() {
+            Object obj = myAgent.getO2AObject();
+            if (obj instanceof AgentMessage<?> request) {
+                handleIncomingSpringRequest(request);
+            } else if (obj == null) {
+                block();
+            }
+        }
+    }
+
+    /** Reads INFORM/FAILURE responses from RecommendationAgent and completes the waiting Spring future. */
+    private class AgentResponseReader extends CyclicBehaviour {
+        private final MessageTemplate template = MessageTemplate.and(
                 MessageTemplate.or(
                         MessageTemplate.MatchPerformative(ACLMessage.INFORM),
                         MessageTemplate.MatchPerformative(ACLMessage.FAILURE)
                 ),
                 MessageTemplate.MatchSender(new AID("RecommendationAgent", AID.ISLOCALNAME))
         );
-        addBehaviour(new CyclicBehaviour(this) {
-            @Override
-            public void action() {
-                ACLMessage msg = myAgent.receive(template);
-                if (msg != null) {
-                    handleAgentResponse(msg);
-                } else {
-                    block();
-                }
+
+        AgentResponseReader(Agent agent) {
+            super(agent);
+        }
+
+        @Override
+        public void action() {
+            ACLMessage msg = myAgent.receive(template);
+            if (msg != null) {
+                handleAgentResponse(msg);
+            } else {
+                block();
             }
-        });
+        }
     }
 
     private void handleIncomingSpringRequest(AgentMessage<?> request) {
@@ -97,9 +108,7 @@ public class UserRequestAgent extends Agent {
             if (msg.getPerformative() == ACLMessage.INFORM) {
                 agentBridge.completeRequest(requestId, response);
             } else {
-                String errorMsg = response.getErrors() != null && !response.getErrors().isEmpty()
-                        ? String.join("; ", response.getErrors())
-                        : "Unknown failure in agent system";
+                String errorMsg = response.hasErrors() ? response.errorSummary() : "Unknown failure in agent system";
                 agentBridge.failRequest(requestId, errorMsg);
             }
         } catch (Exception e) {

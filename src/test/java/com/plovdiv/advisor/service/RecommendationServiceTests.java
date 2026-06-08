@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -24,18 +23,13 @@ class RecommendationServiceTests {
     void sendsSearchRequestThroughAgentBridge() {
         AgentBridge bridge = mock(AgentBridge.class);
         RecommendationService service = new RecommendationService(bridge);
-        AtomicReference<CompletableFuture<AgentMessage<?>>> futureRef = new AtomicReference<>();
 
-        doAnswer(invocation -> {
-            futureRef.set(invocation.getArgument(1));
-            return null;
-        }).when(bridge).registerRequest(any(), any());
         doAnswer(invocation -> {
             AgentMessage<SearchCriteria> request = invocation.getArgument(0);
             RecommendationResult result = new RecommendationResult("P001", 92, Confidence.HIGH, List.of("Within budget"));
-            futureRef.get().complete(new AgentMessage<>(request.getRequestId(), "RECOMMENDATION_RESULTS", List.of(result)));
-            return null;
-        }).when(bridge).sendRequest(any());
+            return CompletableFuture.completedFuture(
+                    new AgentMessage<>(request.getRequestId(), "RECOMMENDATION_RESULTS", List.of(result)));
+        }).when(bridge).sendRequest(any(), any());
 
         List<RecommendationResult> results = service.search(new SearchCriteria(
                 BuyerProfile.FAMILY,

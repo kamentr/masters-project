@@ -21,6 +21,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -81,14 +82,10 @@ class AgentAclIntegrationTests {
         );
 
         AgentMessage<SearchCriteria> request = new AgentMessage<>(requestId, "SEARCH_PROPERTIES", criteria);
-        CompletableFuture<AgentMessage<?>> future = new CompletableFuture<>();
-        agentBridge.registerRequest(requestId, future);
 
-        // Send request through Spring-to-JADE bridge
-        agentBridge.sendRequest(request);
-
-        // Wait for response from UserRequestAgent
-        AgentMessage<?> response = future.get(8, TimeUnit.SECONDS);
+        // Send request through Spring-to-JADE bridge and wait for the response from UserRequestAgent
+        CompletableFuture<AgentMessage<?>> future = agentBridge.sendRequest(request, Duration.ofSeconds(8));
+        AgentMessage<?> response = future.get(10, TimeUnit.SECONDS);
 
         assertThat(response.getRequestId()).isEqualTo(requestId);
         assertThat(response.getErrors()).isEmpty();
@@ -136,13 +133,10 @@ class AgentAclIntegrationTests {
             );
 
             AgentMessage<SearchCriteria> request = new AgentMessage<>(requestId, "SEARCH_PROPERTIES", criteria);
-            CompletableFuture<AgentMessage<?>> future = new CompletableFuture<>();
-            agentBridge.registerRequest(requestId, future);
 
-            agentBridge.sendRequest(request);
-
-            // Wait for response (includes timeout fallback)
-            AgentMessage<?> response = future.get(8, TimeUnit.SECONDS);
+            // Send request and wait for response (includes timeout fallback)
+            CompletableFuture<AgentMessage<?>> future = agentBridge.sendRequest(request, Duration.ofSeconds(8));
+            AgentMessage<?> response = future.get(10, TimeUnit.SECONDS);
 
             assertThat(response.getRequestId()).isEqualTo(requestId);
             List<?> results = (List<?>) response.getPayload();
@@ -187,13 +181,11 @@ class AgentAclIntegrationTests {
             );
 
             AgentMessage<SearchCriteria> request = new AgentMessage<>(requestId, "SEARCH_PROPERTIES", criteria);
-            CompletableFuture<AgentMessage<?>> future = new CompletableFuture<>();
-            agentBridge.registerRequest(requestId, future);
 
-            agentBridge.sendRequest(request);
+            CompletableFuture<AgentMessage<?>> future = agentBridge.sendRequest(request, Duration.ofSeconds(8));
 
             // Future should complete exceptionally due to timeout reply
-            assertThatThrownBy(() -> future.get(8, TimeUnit.SECONDS))
+            assertThatThrownBy(() -> future.get(10, TimeUnit.SECONDS))
                     .hasCauseInstanceOf(RuntimeException.class);
         } finally {
             // Respawn PropertyAgent

@@ -12,7 +12,7 @@ Chosen defaults:
 - Data: synthetic CSV with 60–120 realistic Plovdiv property listings.
 
 MVP scope:
-- The first complete version must implement search, ranked recommendations, explanations, map markers, property details, CSV import, basic admin edit/unavailable actions, ontology updates, feedback storage, and agent logs.
+- The first complete version must implement search, ranked recommendations, explanations, map markers, property details, CSV import, basic admin edit/unavailable actions, ontology updates, and agent logs.
 - Compare, favorites, and manual property creation are secondary features implemented after the core recommendation/import workflow is working.
 
 Main user flow:
@@ -20,7 +20,7 @@ Main user flow:
 2. Spring MVC sends the request into the JADE agent system.
 3. Agents communicate through ACL and query the ontology during recommendations.
 4. The app returns ranked property recommendations with explanations.
-5. User can view properties on a map, leave feedback, and optionally compare results or save favorites after the MVP workflow is complete.
+5. User can view properties on a map and optionally compare results or save favorites after the MVP workflow is complete.
 
 ## Functional Requirements
 
@@ -52,11 +52,6 @@ Main user flow:
     - floor/elevator
     - nearby amenities
     - suitability score
-
-- Save user feedback:
-    - property rating
-    - comment
-    - whether recommendation was useful
 
 ### Admin Features
 
@@ -232,9 +227,6 @@ Persistence choice:
 - `favorites`
     - saved property IDs
 
-- `feedback`
-    - property ID, rating, comment, timestamp
-
 - `import_batches`
     - CSV import metadata
 
@@ -255,7 +247,7 @@ Pages:
     - displays recommendations, explanations, and map
 
 - `/properties/{id}`
-    - detailed property page with ontology-derived facts and database feedback
+    - detailed property page with ontology-derived facts
 
 - `/compare`
     - compare selected properties
@@ -279,9 +271,6 @@ Services:
 
 - `PropertyImportService`
     - parses CSV, validates records, writes property updates through `OntologyService`
-
-- `FeedbackService`
-    - stores ratings/comments in SQLite
 
 - `MapService`
     - prepares property and amenity marker data for Leaflet
@@ -382,13 +371,11 @@ Functional tests:
 - Search as Family profile returns properties with family-oriented explanations.
 - Search as Student profile prioritizes university/transport proximity.
 - Search with too-low budget returns empty result with clear message.
-- Property detail page loads ontology facts and database feedback.
+- Property detail page loads ontology facts.
 - CSV import adds new property individuals to ontology.
 - CSV import validates required amenity distance columns.
 - Editing price updates ontology value and affects future recommendations.
 - Marking property unavailable removes it from recommendations.
-- Feedback is saved and displayed.
-
 Agent tests:
 - `UserRequestAgent` sends ACL `REQUEST`.
 - `RecommendationAgent` sends ACL messages to `PropertyAgent` and `NeighborhoodAgent`.

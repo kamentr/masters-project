@@ -20,11 +20,11 @@ class SchemaInitializationTests {
                         SELECT COUNT(*)
                         FROM sqlite_master
                         WHERE type = 'table'
-                        AND name IN ('users', 'search_history', 'favorites', 'feedback', 'import_batches', 'agent_logs')
+                        AND name IN ('users', 'search_history', 'favorites', 'import_batches', 'agent_logs')
                         """,
                 Integer.class
         );
 
-        assertThat(tableCount).isEqualTo(6);
+        assertThat(tableCount).isEqualTo(5);
     }
 }

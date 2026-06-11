@@ -147,7 +147,7 @@ Every JADE ACL message carries a JSON payload with a standard contract:
 
 ## 6. Database Design
 
-SQLite is used to store non-semantic operational data such as user logs, favorites, history, and feedback.
+SQLite is used to store non-semantic operational data such as user logs, favorites, history, and import metadata.
 
 ```text
 +------------------+         +-------------------+
@@ -161,17 +161,14 @@ SQLite is used to store non-semantic operational data such as user logs, favorit
        |   |                 +-------------------+
        |   +--------------------------+
        |                              |
-+------------------+         +------------------+
-|    favorites     |         |     feedback     |
-+------------------+         +------------------+
-| id (PK)          |         | id (PK)          |
-| user_id (FK)     |         | user_id (FK)     |
-| property_id (UN) |         | property_id      |
-| created_at       |         | rating           |
-+------------------+         | comment          |
-                             | useful           |
-                             | created_at       |
-                             +------------------+
++------------------+
+|    favorites     |
++------------------+
+| id (PK)          |
+| user_id (FK)     |
+| property_id (UN) |
+| created_at       |
++------------------+
 ```
 
 - **`agent_logs`**: Logs all JADE ACL traffic (`id`, `request_id`, `sender`, `receiver`, `performative`, `message_summary`, `created_at`).

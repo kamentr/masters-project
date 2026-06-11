@@ -22,17 +22,6 @@ CREATE TABLE IF NOT EXISTS favorites (
     UNIQUE (user_id, property_id)
 );
 
-CREATE TABLE IF NOT EXISTS feedback (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER,
-    property_id TEXT NOT NULL,
-    rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
-    comment TEXT,
-    useful INTEGER NOT NULL CHECK (useful IN (0, 1)),
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
 CREATE TABLE IF NOT EXISTS import_batches (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     file_name TEXT NOT NULL,
